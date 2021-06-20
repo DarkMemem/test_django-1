@@ -2,7 +2,7 @@ import datetime
 from django.core.exceptions import ValidationError
 
 
-def adult_validator(birthdate, adult_age_limit = 18):
+def adult_validator(birthdate, adult_age_limit=18):
 
     age = datetime.datetime.now().year - birthdate.year
 

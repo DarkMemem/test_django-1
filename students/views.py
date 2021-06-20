@@ -1,5 +1,5 @@
 from django.urls import reverse
-from django.shortcuts import render  # noqa
+from django.shortcuts import render, get_object_or_404  # noqa
 from django.http import HttpResponse, HttpResponseRedirect
 
 from students.forms import StudentCreateForm, StudentUpdateForm
@@ -74,15 +74,10 @@ def get_students(request, args):
 
 # @csrf_exempt
 def create_student(request):
-
     if request.method == 'GET':
-
         form = StudentCreateForm()
-
     elif request.method == 'POST':
-
         form = StudentCreateForm(data=request.POST)
-
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('students_list'))
@@ -90,33 +85,37 @@ def create_student(request):
     return render(
         request=request,
         template_name='students/create.html',
-        context={
-            'form': form
-        }
+        context={'form': form}
     )
 
 
 # @csrf_exempt
 def update_student(request, id):
-
     student = Student.objects.get(id=id)
-
     if request.method == 'GET':
-
         form = StudentUpdateForm(instance=student)
-
     elif request.method == 'POST':
-
         form = StudentUpdateForm(instance=student, data=request.POST)
-
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('students_list'))
+            return HttpResponseRedirect(reverse('students:list'))
 
     return render(
         request=request,
         template_name='students/update.html',
-        context={
-            'form': form
-        }
+        context={'form': form}
+    )
+
+
+def delete_student(request, id):
+    student = Student.objects.get(id=id)
+    # student = get_object_or_404(Student, id=id)
+    if request.method == 'POST':
+        student.delete()
+        return HttpResponseRedirect(reverse('students:list'))
+
+    return render(
+        request=request,
+        template_name='students/delete.html',
+        context={'student': student}
     )
