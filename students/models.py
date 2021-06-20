@@ -16,7 +16,7 @@ class Student(models.Model):
     email = models.EmailField(max_length=120, null=True)
     birthdate = models.DateField(
         # default=datetime.date.today, validators=[adult_validator]
-        default=datetime.date.today, validators=[AdultValidator(21)]
+        # default=datetime.date.today, validators=[AdultValidator(21)]
     )
     enroll_date = models.DateField(default=datetime.date.today)
     graduate_date = models.DateField(default=datetime.date.today)

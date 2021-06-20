@@ -1,5 +1,5 @@
 from django.urls import reverse
-from django.shortcuts import render  # noqa
+from django.shortcuts import render, get_object_or_404  # noqa
 from django.http import HttpResponse, HttpResponseRedirect
 
 from students.forms import StudentCreateForm, StudentUpdateForm
@@ -118,5 +118,20 @@ def update_student(request, id):
         template_name='students/update.html',
         context={
             'form': form
+        }
+    )
+
+
+def delete_student(request, pk):
+    student = get_object_or_404(Student, id=pk)
+    if request.method == 'POST':
+        student.delete()
+        return HttpResponseRedirect(reverse('students:list'))
+
+    return render(
+        request=request,
+        template_name='students/delete.html',
+        context={
+            'student': student
         }
     )
