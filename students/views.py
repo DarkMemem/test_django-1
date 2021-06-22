@@ -2,8 +2,11 @@ from django.urls import reverse
 from django.shortcuts import render, get_object_or_404  # noqa
 from django.http import HttpResponse, HttpResponseRedirect
 
-from students.forms import StudentCreateForm, StudentUpdateForm
+from students.forms import StudentCreateForm, StudentUpdateForm, StudentsFilter
 from students.models import Student
+
+from webargs.djangoparser import use_kwargs, use_args
+from webargs import fields
 
 
 def hello(request):
@@ -22,9 +25,6 @@ def hello(request):
 # )
 # def generate_students(request, count):
 #     return HttpResponse('Hello')
-
-from webargs.djangoparser import use_kwargs, use_args
-from webargs import fields
 
 
 @use_args(
@@ -48,26 +48,14 @@ def get_students(request, args):
         if param_value:
             students = students.filter(**{param_name: param_value})
 
-    html_form = """
-       <form method="get">
-        <label >First name:</label>
-        <input type="text" name="first_name"><br><br>
-        
-        <label >Last name:</label>
-        <input type="text" name="last_name"><br><br>
-        
-        <label>Age:</label>
-        <input type="number" name="age"><br><br>
-        
-        <input type="submit" value="Search">
-       </form>
-    """
+    obj_filter = StudentsFilter(data=request.GET, queryset=students)
 
     return render(
         request=request,
         template_name='students/list.html',
         context={
-            'students': students
+            'students': students,
+            'obj_filter': obj_filter,
         }
     )
 
@@ -85,7 +73,7 @@ def create_student(request):
 
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('students_list'))
+            return HttpResponseRedirect(reverse('students:list'))
 
     return render(
         request=request,
@@ -111,7 +99,7 @@ def update_student(request, id):
 
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('students_list'))
+            return HttpResponseRedirect(reverse('students:list'))
 
     return render(
         request=request,
