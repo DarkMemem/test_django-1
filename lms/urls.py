@@ -31,6 +31,7 @@ urlpatterns = [
     # path('students/update/<int:id>', update_student),
 
     path('students/', include('students.urls')),
+    path('groups/', include('groups.urls')),
 
 ]
 

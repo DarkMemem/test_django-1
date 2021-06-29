@@ -40,13 +40,11 @@ def hello(request):
     location="query",
 )
 def get_students(request, args):
+    students = Student.objects.all().select_related('group', 'headed_group')
 
-    # Students = 42
-    students = Student.objects.all()
-
-    for param_name, param_value in args.items():
-        if param_value:
-            students = students.filter(**{param_name: param_value})
+    # for param_name, param_value in args.items():
+    #     if param_value:
+    #         students = students.filter(**{param_name: param_value})
 
     obj_filter = StudentsFilter(data=request.GET, queryset=students)
 

@@ -43,8 +43,10 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django_filters',
 
+    'core',
     'students',
     'groups',
+    'teachers',
 ]
 
 MIDDLEWARE = [

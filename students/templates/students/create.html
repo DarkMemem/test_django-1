@@ -1,14 +1,21 @@
 {%extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+
 {%block title%}
-    <title>Create student</title>
+    Create student
 {%endblock%}
 
-{%block content%}
+{% block header %}
+    Create student.
+{% endblock %}
+
+{% block content %}
 
   <form method="post">
     {% csrf_token %}
-    {{form.as_p}}
-    <input type="submit" value="Create">
+    {{ form | crispy }}
+    <input class="btn btn-primary mt-3" type="submit" value="Create">
+    <a class="btn btn-primary mt-3" href="{% url 'students:list' %}">Cancel</a>
   </form>
-{%endblock%}
+{% endblock %}

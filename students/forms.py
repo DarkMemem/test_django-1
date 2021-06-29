@@ -17,6 +17,7 @@ class StudentBaseForm(ModelForm):
             'birthdate',
             'enroll_date',
             'graduate_date',
+            'group',
         ]
         # fields = '__all__'
         widgets = {'birthdate': DateInput(attrs={'type': 'date'})}
@@ -51,20 +52,28 @@ class StudentBaseForm(ModelForm):
 
 
 class StudentCreateForm(StudentBaseForm):
-    pass
-
-
-class StudentUpdateForm(StudentBaseForm):
     class Meta(StudentBaseForm.Meta):
         fields = [
             'first_name',
             'last_name',
-            # 'age',
             'birthdate',
             'enroll_date',
             'graduate_date',
-            'graduate_date2',
         ]
+
+
+class StudentUpdateForm(StudentBaseForm):
+    class Meta(StudentBaseForm.Meta):
+        # fields = [
+        #     'first_name',
+        #     'last_name',
+        #     # 'age',
+        #     'birthdate',
+        #     # 'enroll_date',
+        #     # 'graduate_date',
+        #     # 'graduate_date2',
+        # ]
+        fields = '__all__'
 
 
 class StudentsFilter(django_filters.FilterSet):
