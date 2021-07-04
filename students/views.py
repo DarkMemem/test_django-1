@@ -1,7 +1,9 @@
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.shortcuts import render, get_object_or_404  # noqa
 from django.http import HttpResponse, HttpResponseRedirect
+from django.views.generic import UpdateView
 
+from core.views import EditView
 from students.forms import StudentCreateForm, StudentUpdateForm, StudentsFilter
 from students.models import Student
 
@@ -60,15 +62,10 @@ def get_students(request, args):
 
 # @csrf_exempt
 def create_student(request):
-
     if request.method == 'GET':
-
         form = StudentCreateForm()
-
     elif request.method == 'POST':
-
         form = StudentCreateForm(data=request.POST)
-
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('students:list'))
@@ -84,20 +81,16 @@ def create_student(request):
 
 # @csrf_exempt
 def update_student(request, id):
-
     student = Student.objects.get(id=id)
 
-    if request.method == 'GET':
-
-        form = StudentUpdateForm(instance=student)
-
-    elif request.method == 'POST':
-
+    if request.method == 'POST':
         form = StudentUpdateForm(instance=student, data=request.POST)
 
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('students:list'))
+    else:
+        form = StudentUpdateForm(instance=student)
 
     return render(
         request=request,
@@ -121,3 +114,17 @@ def delete_student(request, pk):
             'student': student
         }
     )
+
+
+class UpdateStudentView(EditView):
+    model = Student
+    form_class = StudentUpdateForm
+    success_url = 'students:list'
+    template_name = 'students/update.html'
+
+
+class StudentUpdateView(UpdateView):
+    model = Student
+    form_class = StudentUpdateForm
+    success_url = reverse_lazy('students:list')
+    template_name = 'students/update.html'
