@@ -1,12 +1,12 @@
-from students.views import get_students, create_student, update_student, delete_student
+from students.views import create_student, delete_student
 from django.urls import path
 
-from .views import UpdateStudentView, StudentUpdateView
+from .views import StudentListView, StudentUpdateView
 
 app_name = 'students'
 
 urlpatterns = [
-    path('', get_students, name='list'),
+    path('', StudentListView.as_view(), name='list'),
     path('create/', create_student, name='create'),
     # path('update/<int:id>/', update_student, name='update'),
     # path('update/<int:pk>/', UpdateStudentView.update_object, name='update'),

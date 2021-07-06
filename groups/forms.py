@@ -1,10 +1,27 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, ChoiceField
 
 from .models import Group
 
 
-class GroupCreateForm(ModelForm):
+class GroupBaseForm(ModelForm):
     class Meta:
         model = Group
         fields = '__all__'
-        # exclude = ['start_date']
+
+
+class GroupCreateForm(GroupBaseForm):
+    class Meta(GroupBaseForm.Meta):
+        exclude = ['end_date', 'headman']
+
+
+class GroupUpdateForm(GroupBaseForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['headman_field'] = ChoiceField(
+            choices=[(st.id, str(st)) for st in self.instance.students.all()],
+            label='Headman',
+            required=False
+        )
+
+    class Meta(GroupBaseForm.Meta):
+        exclude = ['headman']

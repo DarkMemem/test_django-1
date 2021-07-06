@@ -25,14 +25,9 @@ urlpatterns = [
     path('hello/', hello),
 
     path('', index, name='index'),
-
-    # path('students/', get_students),
-    # path('students/create/', create_student),
-    # path('students/update/<int:id>', update_student),
-
+    path('accounts/', include('accounts.urls')),
     path('students/', include('students.urls')),
     path('groups/', include('groups.urls')),
-
 ]
 
 

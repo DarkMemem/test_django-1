@@ -1,7 +1,7 @@
 from django.urls import reverse, reverse_lazy
 from django.shortcuts import render, get_object_or_404  # noqa
 from django.http import HttpResponse, HttpResponseRedirect
-from django.views.generic import UpdateView
+from django.views.generic import ListView, UpdateView
 
 from core.views import EditView
 from students.forms import StudentCreateForm, StudentUpdateForm, StudentsFilter
@@ -13,20 +13,6 @@ from webargs import fields
 
 def hello(request):
     return HttpResponse('Hello')
-
-
-#
-#
-# @use_kwargs({
-#     "count": fields.Int(
-#         required=False,
-#         missing=100,
-#         validate=[validate.Range(min=1, max=999)]
-#     )},
-#     location="query"
-# )
-# def generate_students(request, count):
-#     return HttpResponse('Hello')
 
 
 @use_args(
@@ -58,6 +44,19 @@ def get_students(request, args):
             'obj_filter': obj_filter,
         }
     )
+
+
+class StudentListView(ListView):
+    model = Student
+    template_name = 'students/list.html'
+
+    def get_queryset(self):
+        obj_list = StudentsFilter(
+            data=self.request.GET,
+            queryset=self.model.objects.all()
+        )
+
+        return obj_list
 
 
 # @csrf_exempt
