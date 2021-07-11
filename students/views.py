@@ -2,6 +2,8 @@ from django.urls import reverse, reverse_lazy
 from django.shortcuts import render, get_object_or_404  # noqa
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic import ListView, UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 
 from core.views import EditView
 from students.forms import StudentCreateForm, StudentUpdateForm, StudentsFilter
@@ -46,7 +48,7 @@ def get_students(request, args):
     )
 
 
-class StudentListView(ListView):
+class StudentListView(LoginRequiredMixin, ListView):
     model = Student
     template_name = 'students/list.html'
 
@@ -59,7 +61,7 @@ class StudentListView(ListView):
         return obj_list
 
 
-# @csrf_exempt
+@login_required
 def create_student(request):
     if request.method == 'GET':
         form = StudentCreateForm()
